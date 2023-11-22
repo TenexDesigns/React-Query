@@ -1,5 +1,9 @@
+React query has a default stale time of zero  (0)   seconds
+
 In React Query, the `staleTime` is an option you can use when defining a query to control how long the cached data remains "stale" before triggering a background refetch. This option is particularly useful for scenarios where you want to provide a seamless user experience by displaying cached data immediately while also periodically checking for updates.
 
+
+  
 Here's an explanation of how `staleTime` works and how to use it:
 
 ### What is `staleTime`?
