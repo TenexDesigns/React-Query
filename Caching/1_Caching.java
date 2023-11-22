@@ -1,3 +1,7 @@
+React query has a default stale time of 5 minutes .
+
+
+
 React query provides a caching for 5 minites, with the kesy of the uniwur key e.g superhereos and the call back function passed to the useQury
 
 
