@@ -1,5 +1,7 @@
 The enabled prop is set to false initially, preventing the query from fetching data automatically upon component mounting.
-  The button click handler calls the refetch() method to manually initiate the data fetch. and set the Enable prop to true to fetch the data
+  The button click handler calls  setEnable method and set the Enable prop to true  to manually initiate the data fetch. 
+
+Do not call data.map() when data is not undefined. You can do this by adding a condition to check if data is not undefined before calling map(). Here's how you can do it:{data &&data.map}
 
 
       
@@ -18,13 +20,13 @@ const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
           enabled: enabled,
         });
        
-        if (isLoading) return 'Loading...';
-        if (error) return `An error occurred: ${error.message}`;
+        if (isLoading) return <div>'Loading...'<div>;
+        if (error) return <div>`An error occurred: ${error.message}`</div>;
        
         return (
           <div>
             <div> Data</div>
-            { enabled &&
+            { data &&
         data.map(post => (
               <p key={post.id}>{post.title}</p>
             ))  }
