@@ -22,8 +22,18 @@ Provide Pagination Controls: Display pagination controls, such as buttons or lin
 Code Samples
 
 Here's an example of implementing Paginated Queries with React Query:
+-----------------------------------------------------------------------------------------------------------------------
+It seems like you're trying to implement pagination using the `useQuery` hook and managing the page state with `useState`. However, there are a couple of issues in your code that might be causing the problem.
 
-JavaScript
+1. **Update the Query Key Dynamically:**
+   - When you change the page, you should update the query key so that React Query knows it's a different query. Currently, you are using a static query key (`'posts'`). By updating the query key with the current page, React Query will treat it as a new query and fetch the data accordingly.
+
+2. **Handle Page Changes in the Query Function:**
+   - Move the logic for fetching posts into the `useQuery` hook, and use the `currentPage` state to dynamically change the query key.
+
+Here's an updated version of your component:
+
+```jsx
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
@@ -33,12 +43,12 @@ const pageSize = 10;
 const PaginatedPosts = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchPosts = async (pageNumber) => {
-    const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?_page=${pageNumber}&_limit=${pageSize}`);
+  const fetchPosts = async () => {
+    const response = await axios.get(`https://jsonplaceholder.typicode.com/posts?_page=${currentPage}&_limit=${pageSize}`);
     return response.data;
   };
 
-  const { isLoading, data, error } = useQuery('posts', fetchPosts);
+  const { isLoading, data, error } = useQuery(['posts', currentPage], fetchPosts);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -57,28 +67,31 @@ const PaginatedPosts = () => {
       <div>
         {data.map((post) => (
           <div key={post.id}>
+            <h1>{post.id}</h1>
             <h3>{post.title}</h3>
             <p>{post.body}</p>
           </div>
         ))}
       </div>
       <div>
-
-        
-<button
- 
-onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
-
-        
-<button
- 
-onClick={() => handlePageChange(currentPage + 1)}>Next</button>
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <button onClick={() => handlePageChange(currentPage + 1)}>Next {currentPage}</button>
       </div>
     </>
   );
 };
 
 export default PaginatedPosts;
+```
+
+In this version:
+
+- The query key is now an array `['posts', currentPage]`, where `currentPage` is part of the key.
+- The `fetchPosts` function is updated to use `currentPage` directly from the component's state.
+- The `handlePageChange` function now directly updates the `currentPage` state, triggering a new query fetch.
+               ---------------------------------------------------------------------
 Use code with caution. Learn more
 In this example, the useQuery hook is used to fetch a specific page of posts based on the current page number, which is stored in the currentPage state. The handlePageChange function updates the currentPage state, triggering a re-fetch of the query with the updated page number. The pagination controls allow users to navigate between pages, and the rendered data is filtered to display only the posts from the current page.
 
