@@ -70,4 +70,82 @@ Axios interceptors are a powerful and versatile tool for managing HTTP requests 
 
 
 
+  ....------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+  Axios interceptors are functions that Axios calls for every request or response. They can be used to transform the request before it is sent or to transform the response before it is returned to your application. Interceptors can be thought of as middleware in Express or Mongoose [Source 2](https://masteringjs.io/tutorials/axios/interceptors).
+
+There are two types of interceptors in Axios:
+
+1. **Request Interceptors:** These are called before the request is sent. You can use them to modify the request, add headers, or log the request.
+
+2. **Response Interceptors:** These are called after the response is received. You can use them to modify the response, handle errors, or log the response.
+
+Here's an example of how to use Axios interceptors:
+
+```jsx
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+ // Do something before request is sent
+ return config;
+}, function (error) {
+ // Do something with request error
+ return Promise.reject(error);
+});
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+ // Any status code that lies within the range of 2xx causes this function to trigger
+ // Do something with response data
+ return response;
+}, function (error) {
+ // Any status codes that falls outside the range of 2xx cause this function to trigger
+ // Do something with response error
+ return Promise.reject(error);
+});
+```
+[Source 0](https://axios-http.com/docs/interceptors)
+
+You can also use interceptors to set the `Authorization` header automatically on all requests:
+
+```jsx
+axios.interceptors.request.use(req => {
+ req.headers.authorization = 'my secret token';
+ return req;
+});
+```
+[Source 2](https://masteringjs.io/tutorials/axios/interceptors)
+
+Interceptors can also be used to handle errors. For example, you can transform the error message based on the status code:
+
+```jsx
+axios.interceptors.response.use(
+ res => res,
+ err => {
+   if (err.response.status === 404) {
+     throw new Error(`${err.config.url} not found`);
+   }
+   throw err;
+ }
+);
+```
+[Source 2](https://masteringjs.io/tutorials/axios/interceptors)
+
+Remember, you can remove an interceptor by calling the `eject` method:
+
+```jsx
+const myInterceptor = axios.interceptors.request.use(function () {/*...*/});
+axios.interceptors.request.eject(myInterceptor);
+```
+[Source 0](https://axios-http.com/docs/interceptors)
+
+Interceptors are a powerful feature of Axios that allow you to customize the behavior of your HTTP requests and responses. They can be used for a variety of purposes, such as logging, error handling, and modifying requests and responses.
+
+
+
+
+
+
   ....
